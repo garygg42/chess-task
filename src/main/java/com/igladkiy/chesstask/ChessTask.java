@@ -64,7 +64,7 @@ public class ChessTask {
     }
 
     public static boolean hasNextCell(int m, int n, Cell cell) {
-        return cell.x <= m && cell.y < n;
+        return cell.x <= m - 1 && cell.y < n - 1;
     }
 
     public static Cell nextCell(int m, int n, Cell cell) {
