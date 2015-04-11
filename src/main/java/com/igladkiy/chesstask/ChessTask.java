@@ -43,39 +43,44 @@ public class ChessTask {
     }
 
     public static void calculate(int m, int n, List<Chessman> chessmanList, Set<Map<Cell, Chessman>> resultSet) {
-        calculate(m, n, new Cell(0, 0), 0, chessmanList, new HashMap<Cell, Chessman>(), resultSet);
+        calculate(m, n, 0, chessmanList, new HashMap<Cell, Chessman>(), resultSet);
     }
 
-    public static void calculate(int m, int n, Cell start, int chessmanIndex, List<Chessman> chessmanList,
+    public static void calculate(int m, int n, int chessmanIndex, List<Chessman> chessmanList,
             Map<Cell, Chessman> chessmanMap, Set<Map<Cell, Chessman>> resultSet) {
         Chessman chessman = chessmanList.get(chessmanIndex);
-        boolean last = chessmanIndex == chessmanList.size() - 1;
 
-        Set<Cell> hited = getHitCells(m, chessmanIndex, chessmanMap);
-        for (int i = start.x; i < m; i++) {
-            for (int j = start.y; j < n; j++) {
+        Set<Cell> hited = getHitCells(m, n, chessmanMap);
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
                 Cell cell = new Cell(i, j);
-                Set<Cell> hits = getHitCells(m, n, cell, chessman);
-                if (!hited.contains(cell) && Collections.disjoint(chessmanMap.keySet(), hits)) {
-                    // TODO
+                if (!chessmanMap.containsKey(cell) && !hited.contains(cell)
+                        && Collections.disjoint(chessmanMap.keySet(), getHitCells(m, n, cell, chessman))) {
+                    HashMap<Cell, Chessman> chessmanMapInner = new HashMap<Cell, Chessman>(chessmanMap);
+                    chessmanMapInner.put(cell, chessman);
+                    if (chessmanMapInner.size() == chessmanList.size()) {
+                        resultSet.add(chessmanMapInner);
+                    } else {
+                        calculate(m, n, chessmanIndex + 1, chessmanList, chessmanMapInner, resultSet);
+                    }
                 }
             }
         }
     }
 
     public static boolean hasNextCell(int m, int n, Cell cell) {
-        return cell.x <= m - 1 && cell.y < n - 1;
+        return cell.y < n - 1 || (cell.y == n - 1 && cell.x < m - 1);
     }
 
     public static Cell nextCell(int m, int n, Cell cell) {
         int x;
         int y;
-        if (cell.x < m) {
-            x = cell.x + 1;
-            y = cell.y;
-        } else {
-            x = 0;
+        if (cell.y < n - 1) {
+            x = cell.x;
             y = cell.y + 1;
+        } else {
+            x = cell.x + 1;
+            y = 0;
         }
         return new Cell(x, y);
     }

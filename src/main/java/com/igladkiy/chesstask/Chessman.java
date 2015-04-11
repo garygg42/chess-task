@@ -1,7 +1,7 @@
 package com.igladkiy.chesstask;
 
 public enum Chessman {
-    King('K', '\u265A'), Queen('Q', '\u265B'), Rook('R', '\u265C'), Bishop('B', '\u265D'), Knight('H', '\u265E');
+    King('K', '\u265A'), Queen('Q', '\u265B'), Rook('R', '\u265C'), Bishop('B', '\u265D'), Knight('N', '\u265E');
 
     private Character character;
     private Character unicode;
@@ -29,7 +29,7 @@ public enum Chessman {
             return Rook;
         case 'B':
             return Bishop;
-        case 'H':
+        case 'N':
             return Knight;
         default:
             throw new RuntimeException("Convert character to chessman exception");
