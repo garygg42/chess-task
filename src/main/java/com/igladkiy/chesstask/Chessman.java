@@ -1,16 +1,22 @@
 package com.igladkiy.chesstask;
 
 public enum Chessman {
-    King('K'), Queen('Q'), Rook('R'), Bishop('B'), Knight('H');
+    King('K', '\u265A'), Queen('Q', '\u265B'), Rook('R', '\u265C'), Bishop('B', '\u265D'), Knight('H', '\u265E');
 
     private Character character;
+    private Character unicode;
 
-    Chessman(Character character) {
+    Chessman(Character character, Character unicode) {
         this.character = character;
+        this.unicode = unicode;
     }
 
     public Character getCharacter() {
         return character;
+    }
+
+    public Character getUnicode() {
+        return unicode;
     }
 
     public static Chessman convert(Character character) {
