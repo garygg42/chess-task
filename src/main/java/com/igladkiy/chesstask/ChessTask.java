@@ -16,6 +16,8 @@ import com.google.common.collect.Sets;
 public class ChessTask {
 
     public static void main(String[] args) {
+        long startTime = System.currentTimeMillis();
+
         int m;
         int n;
         List<Chessman> chessmanList;
@@ -40,6 +42,10 @@ public class ChessTask {
         for (Map<Cell, Chessman> map : resultSet) {
             printField(m, n, map);
         }
+
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        System.out.println(elapsedTime);
     }
 
     public static void calculate(int m, int n, List<Chessman> chessmanList, Set<Map<Cell, Chessman>> resultSet) {
@@ -66,23 +72,6 @@ public class ChessTask {
                 }
             }
         }
-    }
-
-    public static boolean hasNextCell(int m, int n, Cell cell) {
-        return cell.y < n - 1 || (cell.y == n - 1 && cell.x < m - 1);
-    }
-
-    public static Cell nextCell(int m, int n, Cell cell) {
-        int x;
-        int y;
-        if (cell.y < n - 1) {
-            x = cell.x;
-            y = cell.y + 1;
-        } else {
-            x = cell.x + 1;
-            y = 0;
-        }
-        return new Cell(x, y);
     }
 
     public static Set<Cell> getHitCells(int m, int n, Map<Cell, Chessman> chessmanMap) {
