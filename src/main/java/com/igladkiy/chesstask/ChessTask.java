@@ -1,9 +1,12 @@
 package com.igladkiy.chesstask;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,9 +43,52 @@ public class ChessTask {
     }
 
     public static void calculate(int m, int n, List<Chessman> chessmanList, Set<Map<Cell, Chessman>> resultSet) {
+        calculate(m, n, new Cell(0, 0), 0, chessmanList, new HashMap<Cell, Chessman>(), resultSet);
     }
 
-    public static Set<Cell> getHitCells(int m, int n, Chessman chessman, Cell cell) {
+    public static void calculate(int m, int n, Cell start, int chessmanIndex, List<Chessman> chessmanList,
+            Map<Cell, Chessman> chessmanMap, Set<Map<Cell, Chessman>> resultSet) {
+        Chessman chessman = chessmanList.get(chessmanIndex);
+        boolean last = chessmanIndex == chessmanList.size() - 1;
+
+        Set<Cell> hited = getHitCells(m, chessmanIndex, chessmanMap);
+        for (int i = start.x; i < m; i++) {
+            for (int j = start.y; j < n; j++) {
+                Cell cell = new Cell(i, j);
+                Set<Cell> hits = getHitCells(m, n, cell, chessman);
+                if (!hited.contains(cell) && Collections.disjoint(chessmanMap.keySet(), hits)) {
+                    // TODO
+                }
+            }
+        }
+    }
+
+    public static boolean hasNextCell(int m, int n, Cell cell) {
+        return cell.x <= m && cell.y < n;
+    }
+
+    public static Cell nextCell(int m, int n, Cell cell) {
+        int x;
+        int y;
+        if (cell.x < m) {
+            x = cell.x + 1;
+            y = cell.y;
+        } else {
+            x = 0;
+            y = cell.y + 1;
+        }
+        return new Cell(x, y);
+    }
+
+    public static Set<Cell> getHitCells(int m, int n, Map<Cell, Chessman> chessmanMap) {
+        Set<Cell> hitCells = new HashSet<Cell>();
+        for (Entry<Cell, Chessman> entry : chessmanMap.entrySet()) {
+            hitCells.addAll(getHitCells(m, n, entry.getKey(), entry.getValue()));
+        }
+        return hitCells;
+    }
+
+    public static Set<Cell> getHitCells(int m, int n, Cell cell, Chessman chessman) {
         Set<Cell> unavailableCells = new HashSet<Cell>();
         if (chessman == Chessman.Knight) {
             int x;
