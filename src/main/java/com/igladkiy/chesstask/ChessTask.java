@@ -16,8 +16,6 @@ import com.google.common.collect.Sets;
 public class ChessTask {
 
     public static void main(String[] args) {
-        long startTime = System.currentTimeMillis();
-
         int m;
         int n;
         List<Chessman> chessmanList;
@@ -35,17 +33,19 @@ public class ChessTask {
         Set<Map<Cell, Chessman>> resultSet = Sets.newConcurrentHashSet();
 
         Set<List<Chessman>> permutations = Sets.newHashSet(Collections2.permutations(chessmanList));
+        long startTime = System.currentTimeMillis();
         permutations.parallelStream().forEach(t -> {
             calculate(m, n, t, resultSet);
         });
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
 
         for (Map<Cell, Chessman> map : resultSet) {
             printField(m, n, map);
         }
 
-        long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
-        System.out.println(elapsedTime);
+        System.out.println("Variants: " + resultSet.size());
+        System.out.println("Time: " + elapsedTime);
     }
 
     public static void calculate(int m, int n, List<Chessman> chessmanList, Set<Map<Cell, Chessman>> resultSet) {
